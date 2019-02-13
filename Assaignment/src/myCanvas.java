@@ -8,34 +8,27 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-public class myCanvas extends JPanel implements MouseListener, MouseMotionListener {
+public class myCanvas extends JPanel {
     private int index = 0;
     private Point[] arr = new Point[100000];
-    private final guiFrame guiFrame;
+   
     ArrayList<Point> points = new ArrayList();
     Point oldpos = new Point();
+    
+    
     public myCanvas(guiFrame fr) {
         super();
         index = 0;
-        this.addMouseListener(this);
-        this.addMouseMotionListener(this);
-        this.guiFrame = fr;
-       fr.add(this);
-       fr.setExtendedState(JFrame.MAXIMIZED_BOTH); 
-        fr.setBackground(Color.white);
-     fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        fr.setVisible(true);
-       
+        this.addMouseListener(new CanvasControl());
+        this.addMouseMotionListener(new CanvasControl());
         
-//        BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
-//        Graphics2D graphics2D = image.createGraphics();
-//        fr.paint(graphics2D);
-//        try {
-//			ImageIO.write(image,"jpeg", new File("Practice.jpeg"));
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+        setBackground(Color.white);
+      
+       fr.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+       fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+       fr.setVisible(true);
+        fr.add(this);
+       
 
     }
   
@@ -62,13 +55,11 @@ public class myCanvas extends JPanel implements MouseListener, MouseMotionListen
         g2.drawLine(linex, liney, line2x, line2y);
         
          
-        }
-        
-        	
+        	}	
         } 
 	
-	
-
+	class CanvasControl extends MouseAdapter{
+@Override
     public void mouseDragged(MouseEvent e) {
     	
     	arr[index] = new Point(e.getX(), e.getY());
@@ -78,6 +69,7 @@ public class myCanvas extends JPanel implements MouseListener, MouseMotionListen
        
         
     }
+@Override
     public void mousePressed(MouseEvent e) {
     	
     	
@@ -92,27 +84,13 @@ public class myCanvas extends JPanel implements MouseListener, MouseMotionListen
         
         
     }
-    public void mouseReleased(MouseEvent e)
-    {
-    	
-       
-    }
     
-    public void clear() {
-    	
-    	index = 0;
-    	points.clear();
-    	repaint();
-    }
-
-    public void mouseExited(MouseEvent e) {}
-    public void mouseClicked(MouseEvent e) {}
-    public void mouseEntered(MouseEvent e) {}
-   
-    public void mouseMoved(MouseEvent e) {}
-
-	
-
-
-    
+  
+	}
+	 public void clear() {
+	    	
+	    	index = 0;
+	    	points.clear();
+	    	repaint();
+	    }
 } 

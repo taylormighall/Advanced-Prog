@@ -1,3 +1,4 @@
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -20,27 +21,36 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Buttons extends JPanel{
-	JLabel label;
+	
 	private final guiFrame guiFrame;
 	private final myCanvas myCanvas;
+	private final outputArea outputArea;
+	JLabel uploadDisplay;
 	
 	
-	public Buttons(guiFrame guiFrame, myCanvas myCanvas) {
-		super(new GridLayout(2,2));
+	public Buttons(guiFrame guiFrame, outputArea outputArea, myCanvas myCanvas) {
+		super(new GridLayout(1,3));
 		this.guiFrame = guiFrame;
 		this.myCanvas = myCanvas;
-		 label = new JLabel();
-		 label.setPreferredSize(new Dimension(label.getX(), label.getY()));
+		this.setPreferredSize(getSize());
+		this.outputArea = outputArea;
+		uploadDisplay = new JLabel();
+		 uploadDisplay.setPreferredSize(new Dimension(uploadDisplay.getX(), uploadDisplay.getY()));
 		    
-		    add(label);
+		   outputArea.add(uploadDisplay);
 		    
 		
 		JButton saveButton = new JButton("Save");
+		saveButton.setPreferredSize(new Dimension(10,10));
 		add(saveButton);
 		JButton clearButton = new JButton("Clear");
+		clearButton.setPreferredSize(new Dimension(10,10));
 		 add(clearButton);
 		 JButton uploadButton = new JButton("Upload");
+		 uploadButton.setPreferredSize(new Dimension(10,10));
 		 add(uploadButton);
+		 JButton Phil = new JButton("Phil");
+		 add(Phil);
 		saveButton.addActionListener((ActionEvent ae) -> {
 	            saveButton();
 	        });
@@ -52,7 +62,7 @@ public class Buttons extends JPanel{
             uploadButton();
         });
      
-		
+		guiFrame.add(this);
 	}
 
 
@@ -73,7 +83,7 @@ public class Buttons extends JPanel{
         if(result == JFileChooser.APPROVE_OPTION){
             File selectedFile = file.getSelectedFile();
             String path = selectedFile.getAbsolutePath();
-            label.setIcon(ResizeImage(path));
+            uploadDisplay.setIcon(ResizeImage(path));
             
         }
          //if the user click on save in Jfilechooser
@@ -91,8 +101,8 @@ public class Buttons extends JPanel{
 	    {
 	        ImageIcon MyImage = new ImageIcon(ImagePath);
 	        Image img = MyImage.getImage();
-	        int grayscale = (int)((0.3 *red) + (0.59 * green) + (0.11 * blue));
-	        Image newImg = img.getScaledInstance(label.getWidth(), label.getHeight(), Image.SCALE_SMOOTH);
+	       
+	        Image newImg = img.getScaledInstance(uploadDisplay.getWidth(), uploadDisplay.getHeight(), Image.SCALE_SMOOTH);
 	        ImageIcon image = new ImageIcon(newImg);
 	        
 	        

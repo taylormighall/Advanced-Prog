@@ -1,31 +1,38 @@
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics2D;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.awt.Color;
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 public class guiFrame extends JFrame {
 	
 	private final myCanvas myCanvas;
 	private final Buttons buttons;
+	private final outputArea outputArea;
 	
 	public guiFrame() {
 		super("Digit Prediction");
 		
-		//setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
+		setLayout(new GridLayout(2,1));
 		myCanvas = new myCanvas(this);
-		buttons = new Buttons(this, myCanvas);
+		outputArea = new outputArea(this, myCanvas);
+		buttons = new Buttons(this,outputArea, myCanvas);
 		
-		add(myCanvas);
-		add(buttons);
+		this.setPreferredSize(getSize());
 		
-		myCanvas.setBackground(Color.white);
+		
+		
+		
 		
 		 setResizable(false);
 	        setVisible(true);
-	        //pack();
+	        pack();
 	        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 	
@@ -56,12 +63,7 @@ public class guiFrame extends JFrame {
 		
 	}
 	
-	public void clearCanvas(myCanvas myCanvas) {
-		
-		
-		
-		
-	}
+	
 
 
 
