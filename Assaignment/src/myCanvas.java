@@ -16,7 +16,7 @@ public class myCanvas extends JPanel {
     Point oldpos = new Point();
     
     
-    public myCanvas(guiFrame fr) {
+    public myCanvas(guiFrame fr, outputArea output) {
         super();
         index = 0;
         this.addMouseListener(new CanvasControl());
@@ -27,7 +27,8 @@ public class myCanvas extends JPanel {
        fr.setExtendedState(JFrame.MAXIMIZED_BOTH); 
        fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
        fr.setVisible(true);
-        fr.add(this);
+       this.setPreferredSize(new Dimension(200,200));
+        
        
 
     }

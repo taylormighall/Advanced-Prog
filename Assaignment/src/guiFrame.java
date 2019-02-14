@@ -14,13 +14,15 @@ public class guiFrame extends JFrame {
 	
 	private final myCanvas myCanvas;
 	private final Buttons buttons;
-	private final outputArea outputArea;
+	private  outputArea outputArea;
 	
 	public guiFrame() {
 		super("Digit Prediction");
 		
 		setLayout(new GridLayout(2,1));
-		myCanvas = new myCanvas(this);
+		
+		
+		myCanvas = new myCanvas(this, outputArea);
 		outputArea = new outputArea(this, myCanvas);
 		buttons = new Buttons(this,outputArea, myCanvas);
 		

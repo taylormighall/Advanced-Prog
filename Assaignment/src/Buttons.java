@@ -25,7 +25,7 @@ public class Buttons extends JPanel{
 	private final guiFrame guiFrame;
 	private final myCanvas myCanvas;
 	private final outputArea outputArea;
-	JLabel uploadDisplay;
+
 	
 	
 	public Buttons(guiFrame guiFrame, outputArea outputArea, myCanvas myCanvas) {
@@ -34,10 +34,7 @@ public class Buttons extends JPanel{
 		this.myCanvas = myCanvas;
 		this.setPreferredSize(getSize());
 		this.outputArea = outputArea;
-		uploadDisplay = new JLabel();
-		 uploadDisplay.setPreferredSize(new Dimension(uploadDisplay.getX(), uploadDisplay.getY()));
-		    
-		   outputArea.add(uploadDisplay);
+		
 		    
 		
 		JButton saveButton = new JButton("Save");
@@ -59,7 +56,12 @@ public class Buttons extends JPanel{
         });
 		
 		uploadButton.addActionListener((ActionEvent ae) -> {
-            uploadButton();
+            try {
+				uploadButton();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         });
      
 		guiFrame.add(this);
@@ -72,7 +74,7 @@ public class Buttons extends JPanel{
 		
 	}
 	
-	private void uploadButton() {
+	private void uploadButton() throws IOException {
 		JFileChooser file = new JFileChooser();
         file.setCurrentDirectory(new File(System.getProperty("user.home")));
         //filter the files
@@ -83,7 +85,33 @@ public class Buttons extends JPanel{
         if(result == JFileChooser.APPROVE_OPTION){
             File selectedFile = file.getSelectedFile();
             String path = selectedFile.getAbsolutePath();
-            uploadDisplay.setIcon(ResizeImage(path));
+            BufferedImage myPicture = ImageIO.read(new File(path));
+            int image_width = myPicture.getWidth();
+            int image_height = myPicture.getHeight();
+//            int[] image_data = new int[image_width * image_height];
+//            myPicture.getRGB(0, 0, image_width, image_height, image_data, 0, image_width);
+//            for(int row =0; row<image_height;row++) {
+//            	for (int col=0;col<image_width;col++) {
+//            		int pixel = image_data[row * image_width + col];
+//            	}
+//            }
+            for(int y = 0; y<image_height; y++) {
+            	for (int x = 0; x<image_width; x++) {
+            		int rgbvalue = myPicture.getRGB(x, y);
+            		
+            		
+            		int red = (rgbvalue >> 16) & 0xff;
+            		int green = (rgbvalue >> 8) & 0xff;
+            		int blue = (rgbvalue) & 0xff;
+            		int grayscale = (int) ((0.3 * red) + (0.59 * green) + (0.11 * blue));
+            		int new_pixel_value = 0xFF000000 | (grayscale << 16) | (grayscale <<8)| (grayscale);
+            		myPicture.setRGB(x,  y,  new_pixel_value);
+            	}
+            }
+            Image newImg = myPicture.getScaledInstance(outputArea.getUploadDisplay().getWidth(), outputArea.getUploadDisplay().getHeight(), Image.SCALE_SMOOTH);
+            ImageIcon image = new ImageIcon(newImg);
+            
+            outputArea.getUploadDisplay().setIcon(image);
             
         }
          //if the user click on save in Jfilechooser
@@ -97,17 +125,7 @@ public class Buttons extends JPanel{
       
 	}
   
-	  public ImageIcon ResizeImage(String ImagePath)
-	    {
-	        ImageIcon MyImage = new ImageIcon(ImagePath);
-	        Image img = MyImage.getImage();
-	       
-	        Image newImg = img.getScaledInstance(uploadDisplay.getWidth(), uploadDisplay.getHeight(), Image.SCALE_SMOOTH);
-	        ImageIcon image = new ImageIcon(newImg);
-	        
-	        
-	        return image;
-	    }
+	
 	
 
 
