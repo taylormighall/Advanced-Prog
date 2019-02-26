@@ -39,7 +39,7 @@ public class myCanvas extends JPanel {
 		
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        g2.setStroke(new BasicStroke(20));
+        g2.setStroke(new BasicStroke(10));
         g2.setColor(Color.black);
       
         for (int i = 0; i < index -1; i++) {

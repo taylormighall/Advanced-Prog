@@ -25,15 +25,18 @@ public class Buttons extends JPanel{
 	private final guiFrame guiFrame;
 	private final myCanvas myCanvas;
 	private final outputArea outputArea;
+	private final MNISTDataLoader M;
 
 	
 	
-	public Buttons(guiFrame guiFrame, outputArea outputArea, myCanvas myCanvas) {
+	public Buttons(guiFrame guiFrame, outputArea outputArea, myCanvas myCanvas, MNISTDataLoader M) {
 		super(new GridLayout(1,3));
 		this.guiFrame = guiFrame;
 		this.myCanvas = myCanvas;
 		this.setPreferredSize(getSize());
 		this.outputArea = outputArea;
+		this.M = M;
+		
 		
 		    
 		
@@ -54,6 +57,9 @@ public class Buttons extends JPanel{
 		clearButton.addActionListener((ActionEvent ae) -> {
             clearButton();
         });
+		Phil.addActionListener((ActionEvent ae) -> {
+            Phil();
+        });
 		
 		uploadButton.addActionListener((ActionEvent ae) -> {
             try {
@@ -71,6 +77,21 @@ public class Buttons extends JPanel{
 
 	private void clearButton() {
 	myCanvas.clear();
+		
+	}
+	
+	private void Phil() {
+		try {
+			outputArea.getPrediction().setIcon(M.currentImg());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//try {
+			//outputArea.getPrediction().setIcon(M.currentImg());
+		//} catch (IOException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
 		
 	}
 	

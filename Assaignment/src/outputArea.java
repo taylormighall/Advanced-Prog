@@ -10,6 +10,7 @@ public class outputArea extends JPanel {
 	private final guiFrame guiFrame;
 	private final myCanvas myCanvas;
 	public JLabel uploadDisplay;
+	public JLabel Prediction;
 	
 	public outputArea(guiFrame guiFrame, myCanvas myCanvas) {
 		
@@ -23,7 +24,7 @@ public class outputArea extends JPanel {
 	 this.add(myCanvas);
 	 add(uploadDisplay);
 	
-	JLabel Prediction = new JLabel();
+	Prediction = new JLabel();
 	Prediction.setBackground(Color.blue);
 	Prediction.setVisible(true);
 	Prediction.setOpaque(true);
@@ -34,6 +35,10 @@ public class outputArea extends JPanel {
 	public JLabel getUploadDisplay() {
 		
 		return uploadDisplay;
+	}
+	
+	public JLabel getPrediction() {
+		return Prediction;
 	}
 
 }
