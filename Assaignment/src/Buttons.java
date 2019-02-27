@@ -10,6 +10,12 @@ import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -40,25 +46,30 @@ public class Buttons extends JPanel{
 		
 		    
 		
-		JButton saveButton = new JButton("Save");
+		JButton saveButton = new JButton("Save Drawing");
 		saveButton.setPreferredSize(new Dimension(10,10));
 		add(saveButton);
-		JButton clearButton = new JButton("Clear");
+		JButton clearButton = new JButton("Clear Drawing");
 		clearButton.setPreferredSize(new Dimension(10,10));
 		 add(clearButton);
-		 JButton uploadButton = new JButton("Upload");
+		 JButton uploadButton = new JButton("Upload Image");
 		 uploadButton.setPreferredSize(new Dimension(10,10));
 		 add(uploadButton);
-		 JButton Phil = new JButton("Phil");
-		 add(Phil);
+		 JButton Predict = new JButton("Predict Digit");
+		 add(Predict);
 		saveButton.addActionListener((ActionEvent ae) -> {
 	            saveButton();
 	        });
 		clearButton.addActionListener((ActionEvent ae) -> {
             clearButton();
         });
-		Phil.addActionListener((ActionEvent ae) -> {
-            Phil();
+		Predict.addActionListener((ActionEvent ae) -> {
+            try {
+				Predict();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
         });
 		
 		uploadButton.addActionListener((ActionEvent ae) -> {
@@ -80,68 +91,101 @@ public class Buttons extends JPanel{
 		
 	}
 	
-	private void Phil() {
-		try {
-			outputArea.getPrediction().setIcon(M.currentImg());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	private void Predict() throws Exception {
+		MNISTDataLoader.importMNIST();
+		BufferedImage[] trainingImages = new BufferedImage[6000];
+		trainingImages = MNISTDataLoader.getPictureList();
+		BufferedImage d_img = myCanvas.getUploadedImg();
+		int[]trainingImagesRGB = MNISTDataLoader.getImgListRGB();
+		int[] labels = new int[6000];
+		labels = MNISTDataLoader.getLabels();
+		int trainingDataset[][] = new int[6000][2];
+		double[][] distance_label_array = new double[6000][2];
+		for (int i = 0; i<6000; i++) {
+			trainingDataset[i][0] = trainingImagesRGB[i];
+			trainingDataset[i][1] = labels[i];
+			BufferedImage train = trainingImages[i];
+			BufferedImage myimage = d_img;
+			
+			ImageIcon d_imgIcon = new ImageIcon(myimage);
+			
+			if((train.getWidth() != myimage.getWidth()) || (train.getHeight() != myimage.getHeight())) {
+				outputArea.getPrediction().setText("Please Draw or Upload an Image");
+			throw new Exception("The Images have different dimensions");
+			
+			}
+			
+			double pixel_error_sum = 0; 
+			for (int row = 0; row< myimage.getHeight(); row++) {
+				for(int col = 0; col<myimage.getWidth(); col++) {
+					int train_pixel[][] = new int[train.getWidth()][train.getHeight()];
+					train_pixel[col][row]= train.getRGB(col, row);
+					int myimage_pixel[][] = new int[myimage.getWidth()][myimage.getHeight()];
+					myimage_pixel[col][row]= myimage.getRGB(col, row);
+					
+					pixel_error_sum += ((train_pixel[col][row] - myimage_pixel[col][row]) * (train_pixel[col][row] - myimage_pixel[col][row]) );
+				}
+			}
+			double pixel_error = Math.sqrt(pixel_error_sum);
+			distance_label_array[i][0] = labels[i];
+			distance_label_array[i][1] = pixel_error;
+			
+			
+			
+			
+			
 		}
-		//try {
-			//outputArea.getPrediction().setIcon(M.currentImg());
-		//} catch (IOException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
 		
+		double sorted_distance_label_array[][] = new double[6000][1];
+		
+		
+		Arrays.sort(distance_label_array, Comparator.comparingDouble(z -> z[1]));
+		sorted_distance_label_array = distance_label_array;
+		//System.out.println(sorted_distance_label_array[0][1]);
+		int[] closest_k_label_array = new int[100];
+		for (int i = 0; i<100; i++) {
+			
+			closest_k_label_array[i] = (int) sorted_distance_label_array[i][0];
+			
+		}
+		
+		Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+		for (int i : closest_k_label_array ) {
+		    Integer count = map.get(i);
+		    map.put(i, count != null ? count+1 : 0);
+		}
+		Integer popular = Collections.max(map.entrySet(),
+			    new Comparator<Map.Entry<Integer, Integer>>() {
+			    @Override
+			    public int compare(Entry<Integer, Integer> o1, Entry<Integer, Integer> o2) {
+			        return o1.getValue().compareTo(o2.getValue());
+			    }
+			}).getKey();
+		
+		int count = 0;
+		for (int i=0; i<closest_k_label_array.length;i++) {
+			if (popular == closest_k_label_array[i]) {
+				count++;
+			}	
+			
+		}
+		System.out.println("The count is " + count);
+		count = count * 100;
+		double confidence = count/closest_k_label_array.length;
+		
+		System.out.println("Prediction is " + popular);
+		System.out.println(confidence + "% Confidence");
+		
+		
+		outputArea.getPrediction().setText("Prediction is " + popular + "  (" +  confidence + "% Confidence)");
+		
+		
+		
+//		
 	}
 	
 	private void uploadButton() throws IOException {
-		JFileChooser file = new JFileChooser();
-        file.setCurrentDirectory(new File(System.getProperty("user.home")));
-        //filter the files
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("*.Images", "jpg","gif","png");
-        file.addChoosableFileFilter(filter);
-        int result = file.showSaveDialog(null);
-         //if the user click on save in Jfilechooser
-        if(result == JFileChooser.APPROVE_OPTION){
-            File selectedFile = file.getSelectedFile();
-            String path = selectedFile.getAbsolutePath();
-            BufferedImage myPicture = ImageIO.read(new File(path));
-            int image_width = myPicture.getWidth();
-            int image_height = myPicture.getHeight();
-//            int[] image_data = new int[image_width * image_height];
-//            myPicture.getRGB(0, 0, image_width, image_height, image_data, 0, image_width);
-//            for(int row =0; row<image_height;row++) {
-//            	for (int col=0;col<image_width;col++) {
-//            		int pixel = image_data[row * image_width + col];
-//            	}
-//            }
-            for(int y = 0; y<image_height; y++) {
-            	for (int x = 0; x<image_width; x++) {
-            		int rgbvalue = myPicture.getRGB(x, y);
-            		
-            		
-            		int red = (rgbvalue >> 16) & 0xff;
-            		int green = (rgbvalue >> 8) & 0xff;
-            		int blue = (rgbvalue) & 0xff;
-            		int grayscale = (int) ((0.3 * red) + (0.59 * green) + (0.11 * blue));
-            		int new_pixel_value = 0xFF000000 | (grayscale << 16) | (grayscale <<8)| (grayscale);
-            		myPicture.setRGB(x,  y,  new_pixel_value);
-            	}
-            }
-            Image newImg = myPicture.getScaledInstance(outputArea.getUploadDisplay().getWidth(), outputArea.getUploadDisplay().getHeight(), Image.SCALE_SMOOTH);
-            ImageIcon image = new ImageIcon(newImg);
-            
-            outputArea.getUploadDisplay().setIcon(image);
-            
-        }
-         //if the user click on save in Jfilechooser
-
-
-        else if(result == JFileChooser.CANCEL_OPTION){
-            System.out.println("No File Select");
-        }
-      
+		myCanvas.upload();
     
       
 	}
@@ -152,20 +196,12 @@ public class Buttons extends JPanel{
 
 
 	private void saveButton() {
-		guiFrame.saveCanvas();
+		myCanvas.saveCanvas();
 	
-		
-//		BufferedImage image = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
-//     Graphics graphics2D = image.getGraphics();
-//     guiFrame.getmyCanvas().drawImage(image);
-//      try {
-//			ImageIO.write(image,"jpeg", new File("Practice1.jpeg"));
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
+				
 	}
+	
+
 }
 
 

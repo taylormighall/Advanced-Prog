@@ -21,7 +21,8 @@ public class MNISTDataLoader{
 	
 	
 
-	BufferedImage[] currentImgList = new BufferedImage[60000];
+	static BufferedImage[] ImgList = new BufferedImage[6000];
+	static int[] label_list = new int[6000]; 
 
 
 
@@ -63,101 +64,15 @@ public class MNISTDataLoader{
 			(in_stream_images.read() << 16) | (in_stream_images.read() << 8) | (in_stream_images.read());
 	System.out.println(image_width);
 	
-//	byte[] label_data = new byte[number_of_labels];
-//	
-//	int image_size = image_height * image_width;
-//	byte[] image_data = new byte[image_size * number_of_images];
-//	
-//	in_stream_labels.read(label_data);
-//	
-//	in_stream_images.read(image_data);
-//	ArrayList<int[][]> image_list = new ArrayList<int[][]>();
-//	int[][] image;
-//	
-//	for(int i=0;i<number_of_labels;i++) {
-//		
-//		int label = label_data[i];
-//		System.out.println(label);
-//		
-//		image = new int[image_width][image_height];
-//		
-//		for(int row = 0; row<image_height;row++) {
-//			for(int col = 0; col < image_width; col++) {
-//				image[row][col] = image_data[(i*image_size) + ((row*image_width) + col)];
-//			}
-//		}
-//		image_list.add(image);
-//		
+	byte[] label_data = new byte[number_of_labels];
+	
+	int image_size = image_width * image_height;
 	}
 	
 	
-//	int[] label_list = new int[number_of_labels]; 
-//	byte[] label_data = new byte[number_of_labels];
-//	
-//	int image_size = image_height * image_width;
-//	byte[] image_data = new byte[image_size * number_of_images];
-//	
-//	ArrayList<int[][]> image_list = new ArrayList<int[][]>();
-//	int[][] image;
-//	
-//	for(int i=0; i<2; i++)
-//	{
-//		int label = label_data[i];
-//		
-//		image = new int[image_width][image_height];
-//		
-//		for(int row = 0; row <image_height; row++)
-//		{ 
-//			for (int col = 0; col<image_width; col++)
-//		
-//			{
-//				
-//			image[row][col]= image_data[(i*image_size) +((row*image_width) + col)];
-//		}
-//			image_list.add(image);
-//			System.out.print(image_list);
-//		}}
-//	System.out.println("Done?");
-	
-	
-	
-	
-
-	
-
-
-	
-	
-	
-
-	
-	
-	
-//	for(int record = 0; record < 10; record++)
-//	{
-//		label = in_stream_labels.read();
-//		label_list[record] = label;
-//		
-//		
-//		int[] image_data2 = new int[image_width * image_height];
-//		image_size = image_width * image_height;
-//		
-//	for(int pixel = 0; pixel < image_size; pixel++) {
-//		
-//		int gray_value = in_stream_images.read();
-//		int rgb_value = 0xFF000000 | (gray_value << 16) | (gray_value) << 8 | (gray_value);
-//		
-//		image_data2[pixel] = rgb_value;
-//		
-//	}
-//	}
-	
-	
-
-
 
 		
-	public ImageIcon currentImg() throws IOException {
+	public static void importMNIST() throws IOException {
 	
 	
 
@@ -189,46 +104,19 @@ public class MNISTDataLoader{
 		int image_width = (in_stream_images.read() <<24) |
 				(in_stream_images.read() << 16) | (in_stream_images.read() << 8) | (in_stream_images.read());
 		System.out.print(image_width);
-		int[] label_list = new int[number_of_labels]; 
+		
 		byte[] label_data = new byte[number_of_labels];
 		
 		int image_size = image_width * image_height;
 		
-		
-		
-		
-//		for(int record = 0; record < 1; record++)
-//			{
-//				int label = in_stream_labels.read();
-//				label_list[record] = label;
-//				
-//				
-//				int[] image_data = new int[image_width * image_height];
-//				image_size = image_width * image_height;
-//				
-//			for(int pixel = 0; pixel < image_size; pixel++) {
-//				
-//				int gray_value = in_stream_images.read();
-//				int rgb_value = 0xFF000000 | (gray_value << 16) | (gray_value) << 8 | (gray_value);
-//				
-//				image_data[pixel] = rgb_value;
-//			}
-//			
-//			}
-//		System.out.println("Hmm");
-				
-				ImageIcon Plz = null;
-			
-		
-	int[] image_data;
-	BufferedImage[] currentImgList = new BufferedImage[number_of_images];
+		int[] image_data;
+	
 	
 			
-	for (int record = 0; record < number_of_images/100; record++)
+	for (int record = 0; record < 6000; record++)
 	{
 		
 		BufferedImage currentImg = new BufferedImage(image_width, image_height, BufferedImage.TYPE_INT_ARGB);
-		
 		
 		int label = in_stream_labels.read();
 		label_list[record] = label;
@@ -236,33 +124,59 @@ public class MNISTDataLoader{
 		image_size = image_width * image_height;
 		for (int pixel = 0; pixel < image_size; pixel++)
 		{
+			
 			int gray_value = in_stream_images.read();
-			int rgb_value = 0xFF000000 | (gray_value << 16) | (gray_value) << 8 | (gray_value);
-			
-			image_data[pixel] = rgb_value;
-			
+			int red = (gray_value >> 16) & 0xff;
+    		int green = (gray_value >> 8) & 0xff;
+    		int blue = (gray_value) & 0xff;
+    		red = 255 - red;
+    		green = 255 - green;
+    		blue = 255 - blue;
+    		int grayscale = (int) ((0.3 * red) + (0.59 * green) + (0.11 * blue));
+    		int new_pixel_value = 0xFF000000 | (grayscale << 16) | (grayscale <<8)| (grayscale);
+			image_data[pixel] = new_pixel_value;
 			
 		}
 		currentImg.setRGB(0, 0, image_width, image_height, image_data, 0, image_width);
-		currentImgList[record] = currentImg;
-		
-		
-		
-		
+		ImgList[record] = currentImg;	
+		}	
 	
-		
-	}
-	Plz = new ImageIcon(currentImgList[50]);
-	System.out.print("Added to List");
-	return  Plz;
 	}
 	
-	public  BufferedImage[] getPictureList() {
-		return currentImgList ;
+	public static BufferedImage[] getPictureList() {
 		
+		return ImgList ;
+		
+	}
+	
+	public static int[] getLabels() {
+		return label_list;
+	}
+	
+	public static int[] getImgListRGB() {
+		BufferedImage ImgList[] = new BufferedImage[6000];
+		ImgList = getPictureList();
+		int[] Lble = getLabels();
+		int[] ImgListRGB = new int[6000];
+		int width = 28;
+		int height = 28;
+		int[][] imgListRGB = new int[width][height];
+		for (int i=0; i<6000; i++) {
+			for(int row = 0; row< height; row++) {
+				for (int col=0; col<width;col++) {
+			
+			imgListRGB[row][col] = ImgList[i].getRGB(col,row);
+			ImgListRGB[i] = imgListRGB[row][col];
+			
+		
+		}
+			}
+		}
+		return ImgListRGB;
 	}
 	}
 	
+
 
 	
 	

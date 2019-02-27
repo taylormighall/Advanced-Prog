@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 
 import javax.swing.JLabel;
@@ -9,7 +10,7 @@ import javax.swing.JPanel;
 public class outputArea extends JPanel {
 	private final guiFrame guiFrame;
 	private final myCanvas myCanvas;
-	public JLabel uploadDisplay;
+	public static JLabel uploadDisplay;
 	public JLabel Prediction;
 	
 	public outputArea(guiFrame guiFrame, myCanvas myCanvas) {
@@ -25,14 +26,18 @@ public class outputArea extends JPanel {
 	 add(uploadDisplay);
 	
 	Prediction = new JLabel();
-	Prediction.setBackground(Color.blue);
+	Prediction.setBackground(Color.black);
+	Prediction.setFont(new Font("Serif", Font.PLAIN, 30));
+	Prediction.setForeground(Color.white);
+	Prediction.setAlignmentY(TOP_ALIGNMENT);
+	Prediction.setAlignmentX(CENTER_ALIGNMENT);
 	Prediction.setVisible(true);
 	Prediction.setOpaque(true);
 	this.add(Prediction);
 	guiFrame.add(this);
 	}
 	
-	public JLabel getUploadDisplay() {
+	public static JLabel getUploadDisplay() {
 		
 		return uploadDisplay;
 	}

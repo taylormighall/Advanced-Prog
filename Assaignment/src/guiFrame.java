@@ -52,27 +52,12 @@ public class guiFrame extends JFrame {
 
 	public static void main(String[] args) throws IOException {
         new guiFrame();
+        
+        System.out.print("Here we go");
      
     }
 
-	public void saveCanvas() {
-		
-		Dimension size = myCanvas.getSize();
-        BufferedImage image = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g2 = image.createGraphics();
-        myCanvas.paintComponent(g2);
-        try
-        {
-            ImageIO.write(image, "jpg", new File("snapshot.jpg"));
-            System.out.println("Panel saved as Image.");
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }	
-		// TODO Auto-generated method stub
-		
-	}
+	
 	
 	
 
