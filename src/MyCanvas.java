@@ -18,6 +18,7 @@ public class MyCanvas extends JPanel {
    
     //Sets up the required variables to draw and save the points of the Canvas image
     
+<<<<<<< HEAD
     public MyCanvas(GuiFrame guiFrame) {
         super();
         index = 0;
@@ -38,6 +39,27 @@ public class MyCanvas extends JPanel {
     }
     
 
+=======
+    public MyCanvas(GuiFrame guiFrame, OutputArea output) {
+        super();
+        index = 0;
+        this.addMouseListener(new CanvasControl());
+        this.addMouseMotionListener(new CanvasControl());
+        
+        // Adds mouse listeners to the class
+        
+        setBackground(Color.black);
+       guiFrame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
+       guiFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+       guiFrame.setVisible(true);
+       this.setPreferredSize(new Dimension(200,200));
+        
+       //sets up the properties of the Canvas including making it black to align with the training and test data
+       
+
+    }
+    
+>>>>>>> branch 'master' of https://github.com/taylormighall/Advanced-Prog
 public void saveCanvas() {
 		
 		Dimension size = this.getSize();

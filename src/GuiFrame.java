@@ -13,7 +13,11 @@ public class GuiFrame extends JFrame {
 		super("Digit Prediction");
 		
 		setLayout(new GridLayout(2,1));
+<<<<<<< HEAD
 		myCanvas = new MyCanvas(this);
+=======
+		myCanvas = new MyCanvas(this, outputArea);
+>>>>>>> branch 'master' of https://github.com/taylormighall/Advanced-Prog
 		outputArea = new OutputArea(this, myCanvas);
 		new Buttons(this, myCanvas, M);
 		
