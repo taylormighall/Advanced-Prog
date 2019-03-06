@@ -18,7 +18,7 @@ public class MyCanvas extends JPanel {
    
     //Sets up the required variables to draw and save the points of the Canvas image
     
-<<<<<<< HEAD
+
     public MyCanvas(GuiFrame guiFrame) {
         super();
         index = 0;
@@ -39,7 +39,6 @@ public class MyCanvas extends JPanel {
     }
     
 
-=======
     public MyCanvas(GuiFrame guiFrame, OutputArea output) {
         super();
         index = 0;
@@ -59,7 +58,7 @@ public class MyCanvas extends JPanel {
 
     }
     
->>>>>>> branch 'master' of https://github.com/taylormighall/Advanced-Prog
+
 public void saveCanvas() {
 		
 		Dimension size = this.getSize();
