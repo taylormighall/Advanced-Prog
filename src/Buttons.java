@@ -17,9 +17,9 @@ import javax.swing.JPanel;
 
 public class Buttons extends JPanel{
 	
-	private final myCanvas myCanvas;
+	private final MyCanvas myCanvas;
 
-	public Buttons(guiFrame guiFrame, myCanvas myCanvas, MNISTDataLoader M) {
+	public Buttons(GuiFrame guiFrame, MyCanvas myCanvas, MNISTDataLoader M) {
 		super(new GridLayout(1,3));
 		this.myCanvas = myCanvas;
 		
@@ -100,7 +100,7 @@ public class Buttons extends JPanel{
 			
 			
 			if((train.getWidth() != myimage.getWidth()) || (train.getHeight() != myimage.getHeight())) {
-				outputArea.getPrediction().setText("         Please Draw or Upload an Image");
+				OutputArea.getPrediction().setText("         Please Draw or Upload an Image");
 			throw new Exception("The Images have different dimensions");
 			
 			}
@@ -182,7 +182,7 @@ public class Buttons extends JPanel{
 		System.out.println(confidence + "% Confidence");
 		
 		
-		outputArea.getPrediction().setText("                  Prediction is " + popular + "  (" +  confidence + "% Confidence)");
+		OutputArea.getPrediction().setText("                  Prediction is " + popular + "  (" +  confidence + "% Confidence)");
 			
 		// This calculates the % confidence of the result and displays the Predicted digit with confidence		
 	}
